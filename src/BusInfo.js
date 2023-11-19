@@ -9,7 +9,8 @@ export default ({
   onPressBookmark,
   num,
   directionDescription,
-  numColor
+  numColor,
+  processedNextBusInfos
 }) => {
   return (
     <View style={{ flexDirection: 'row' }}>
@@ -35,16 +36,14 @@ export default ({
       <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
         {/* M분 S초 / N번째 전 / 여유 */}
         <View style={{ flex: 1 }}>
-          <NextBusInfo
-            hasInfo={true}
-            remainedTimeText={'8분 0초'}
-            numOfRemainedStops={5}
-            seatStatusText={'여유'}
-          />
-
-          <NextBusInfo
-            hasInfo={false}
-          />
+          {processedNextBusInfos.map(info => (
+            <NextBusInfo
+              hasInfo={info.hasInfo}
+              remainedTimeText={info.remainedTimeText}
+              numOfRemainedStops={info.numOfRemainedStops}
+              seatStatusText={info.seatStatusText}
+            />
+          ))}
         </View>
 
         {/* 알람아이콘 */}
