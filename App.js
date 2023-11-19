@@ -4,13 +4,26 @@ import BusInfo from './src/BusInfo';
 import { COLOR } from './src/color';
 import { busStop, getBusNumColorByType, getRemainedTimeText, getSeatStatusText, getSections } from './src/data';
 import dayjs from 'dayjs';
+import { useEffect, useState } from 'react';
 
 export default function App() {
 
   const sections = getSections(busStop.buses);
   const renderItem = ({ item: bus }) => {
     const numColor = getBusNumColorByType(bus.type);
-    const now = dayjs();
+
+    const [now, setNow] = useState(dayjs());
+
+    useEffect(() => {
+      const interval = setInterval(() => {
+        const newNow = dayjs();
+        setNow(newNow);
+      }, 1000);
+
+      return () => {
+        clearInterval(interval);
+      };
+    }, [])
 
     /**
      * Start
