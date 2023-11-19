@@ -1,14 +1,69 @@
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, SectionList, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, SectionList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import BusInfo from './src/BusInfo';
 import { COLOR } from './src/color';
 import { busStop, getBusNumColorByType, getRemainedTimeText, getSeatStatusText, getSections } from './src/data';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
+import { SimpleLineIcons } from '@expo/vector-icons';
+import Margin from './src/Margin';
+import BookmarkButton from './src/BookmarkButton';
+
+const busStopBookmarkSize = 22;
+const busStopBookmarkPadding = 6;
 
 export default function App() {
 
   const sections = getSections(busStop.buses);
+
+  const onPressBusStopBookmark = () => {
+    // TODO
+  }
+
+  const ListHeaderComponent = () => {
+    return (
+      <SafeAreaView style={{ backgroundColor: COLOR.GRAY_3 }}>
+        {/* 뒤로가기, 홈 아이콘 */}
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <TouchableOpacity style={{ padding: 10 }}>
+            <SimpleLineIcons name='arrow-left' size={20} color={COLOR.WHITE}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={{ padding: 10 }}>
+            <SimpleLineIcons name='home' size={20} color={COLOR.WHITE}/>
+          </TouchableOpacity>
+        </View>
+
+        {/* 정류소 번호, 이름, 방향 */}
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <Margin height={10}/>
+
+          <Text style={{ color: COLOR.WHITE, fontSize: 13 }}>{busStop.id}</Text>
+          <Margin height={4}/>
+
+          <Text style={{ color: COLOR.WHITE, fontSize: 20 }}>{busStop.name}</Text>
+          <Margin height={4}/>
+
+          <Text style={{ color: COLOR.GRAY_1, fontSize: 14 }}>{busStop.directionDescription}</Text>
+          <Margin height={20}/>
+
+          {/* 북마크 */}
+          <BookmarkButton
+            size={busStopBookmarkSize}
+            isBookmarked={busStop.isBookmarked}
+            onPress={onPressBusStopBookmark}
+            style={{ 
+              borderWidth: 0.3, 
+              borderColor: COLOR.GRAY_1, 
+              borderRadius: (busStopBookmarkSize + busStopBookmarkPadding * 2) / 2, 
+              padding: busStopBookmarkPadding
+            }}
+          />
+
+          <Margin height={25}/>
+        </View>
+      </SafeAreaView>
+    )
+  }
 
   const renderSectionHeader = ({section: {title} }) => (
     <View style={{ 
@@ -86,14 +141,15 @@ export default function App() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <SectionList
         style={{ flex: 1, width: '100%' }}
         sections={sections}
+        ListHeaderComponent={ListHeaderComponent}
         renderSectionHeader={renderSectionHeader}
         renderItem={renderItem}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
