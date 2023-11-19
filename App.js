@@ -15,6 +15,7 @@ const busStopBookmarkPadding = 6;
 export default function App() {
 
   const sections = getSections(busStop.buses);
+  const [now, setNow] = useState(dayjs());
 
   const onPressBusStopBookmark = () => {
     // TODO
@@ -22,7 +23,10 @@ export default function App() {
 
   const ListHeaderComponent = () => {
     return (
-      <SafeAreaView style={{ backgroundColor: COLOR.GRAY_3 }}>
+      <SafeAreaView style={{ 
+        backgroundColor: COLOR.GRAY_3 ,
+        height: 250
+      }}>
         {/* 뒤로가기, 홈 아이콘 */}
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <TouchableOpacity style={{ padding: 10 }}>
@@ -82,19 +86,6 @@ export default function App() {
   const renderItem = ({ item: bus }) => {
     const numColor = getBusNumColorByType(bus.type);
 
-    const [now, setNow] = useState(dayjs());
-
-    useEffect(() => {
-      const interval = setInterval(() => {
-        const newNow = dayjs();
-        setNow(newNow);
-      }, 1000);
-
-      return () => {
-        clearInterval(interval);
-      };
-    }, [])
-
     /**
      * Start
      */
@@ -140,6 +131,25 @@ export default function App() {
     )
   }
 
+  const ItemSeparatorComponent = () => (
+    <View style={{ width: '100%', height: 0.3, backgroundColor: COLOR.GRAY_2}} />
+  )
+
+  const ListFooterComponent = () => {
+    <Margin height={30} />
+  }
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const newNow = dayjs();
+      setNow(newNow);
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [])
+
   return (
     <View style={styles.container}>
       <SectionList
@@ -148,6 +158,8 @@ export default function App() {
         ListHeaderComponent={ListHeaderComponent}
         renderSectionHeader={renderSectionHeader}
         renderItem={renderItem}
+        ItemSeparatorComponent={ItemSeparatorComponent}
+        ListFooterComponent={ListFooterComponent}
       />
     </View>
   );
